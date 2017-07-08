@@ -1,0 +1,11 @@
+{
+  "manifest_version": 2,
+  "name": "Addition of Favorites",
+  "version": "0.1",
+  "content_scripts": [
+    {
+      "matches": ["*://*.imgur.com/*"],
+      "js": ["AdditionofFavorites.user.js"]
+    }
+  ]
+}
