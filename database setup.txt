@@ -1,0 +1,13 @@
+one post:
+
+//set favorite id with stored count id
+		localStorage.setItem(iUserName+iFavorite,favoriteCount+'');	
+//set stored incremented id with favorite id
+	localStorage.setItem(iUserName+'favorite'+favoriteCount,iFavorite);
+//set thumbnail id
+	localStorage.setItem(iUserName+'favoriteThumb'+favoriteCount,iFavoriteThumb);
+
+
+localStorage.IATTM0Geof:33			: Username + Post id : entry id
+localStorage.IATTMfavorite33:0Geof		: UserName + 'favorite' + entry id : post id
+localStorage.IATTMfavoriteThumb33:LYLp2vSb.jpg	: UserName + 'favoriteThumb' + entry id : thumbnail image

@@ -49,9 +49,9 @@ function contentEval(source) {
 * 															   					   *
 ************************************************************************************/
 
-function setUpABC(){
+function setUpABC() {
+    window.iUserName = document.getElementsByClassName("topbar-icon account-user-name")[0].innerText;
 	getPageType();
-	window.iUserName = document.getElementsByClassName("topbar-icon account-user-name")[0].innerText;
 	if(localStorage.getItem(window.iUserName+'FavoriteCount')==null)
 		localStorage.setItem(window.iUserName+'FavoriteCount','0');
 	var lSCategories = localStorage.getItem(iUserName+'favoriteCategories');
@@ -112,14 +112,14 @@ function recursiveAttributeFinder(pageElement,attriType,attriValue,newid)
 ************************************************************************************/
 
 function getPageType(){
-	var locationString = window.location.href;
-	window.iPageType = 'notSet';
-	if(locationString == 'http://imgur.com/account/favorites')
-        		window.iPageType = 'favorites';
-	if(locationString == 'http://imgur.com/')
-        		window.iPageType = 'home';
-
-
+	var locationString = window.location.href;	
+	if (locationString == 'http://imgur.com/account/favorites')
+	    window.iPageType = 'favorites';
+	else if(locationString == 'http://imgur.com/')
+	    window.iPageType = 'home';
+	else if (locationString == 'http://imgur.com/' + window.iUserName + '/favorites')
+	    window.iPageType = 'galleryfavorites';
+	else window.iPageType = 'notSet';
 
 	}
 
@@ -283,7 +283,7 @@ function iLooper(time){
 /***********************************************************************************
 *				               removeFavorite					   			       *
 * 										   			                               *
-* Removed favorite from locally stored favorites			 	                   *
+* Remove favorite from locally stored favorites			 	                       *
 * 										                                           *
 * 										                                           *
 * 										                                           *
@@ -334,22 +334,22 @@ function removeFavorite(iFavorite, iUserName){
 
 function getExportList(iUserName){
 	var stringToReturn = 'u|'+iUserName+'|u\r\n';
-	var favoriteCount = parseInt(localStorage.getItem(iUserName+'FavoriteCount'));
+	var favoriteCount = parseInt(getLSRow(iUserName , 'FavoriteCount'));
 	var tempId;
 	var i;
-	var categories = localStorage.getItem(iUserName+'favoriteCategories').split('|');
+	var categories = getLSRow(iUserName , 'favoriteCategories').split('|');
 	var max = categories.length;
 	stringToReturn += 'c|'+categories[0];
 	for(i = 1;i<max;i++)
 		stringToReturn += ','+categories[i];
 	stringToReturn +='|c\r\n';
 	for(i = 0;i<favoriteCount;i++){
-		tempId = localStorage.getItem(iUserName+'favorite'+i);
+	    tempId = getLSRow(iUserName ,'favorite' + i);
 		stringToReturn += 'f|'+ i +':';
 		stringToReturn += tempId +':';
-		stringToReturn += localStorage.getItem(iUserName+'CatId'+i) +':';
-		stringToReturn += localStorage.getItem(iUserName+'Time'+i) +':';
-		stringToReturn += localStorage.getItem(iUserName+'favoriteThumb'+i)+'|f\r\n';
+		stringToReturn += getLSRow(iUserName , 'CatId' + i) + ':';
+		stringToReturn += getLSRow(iUserName , 'Time' + i) + ':';
+		stringToReturn += getLSRow(iUserName , 'favoriteThumb' + i) + '|f\r\n';
 		}
 	return stringToReturn;
 
@@ -368,7 +368,8 @@ function getExportList(iUserName){
 
 function addFavoriteCategory(iUserName,category){
 	var categories = '';
-	var lSCategories = localStorage.getItem(iUserName+'favoriteCategories');
+	var lSCategories = getLSRow(iUserName, 'favoriteCategories');
+    //var lSCategories = localStorage.getItem(iUserName+'favoriteCategories');
 	if (lSCategories != null)
 		categories += lSCategories;
 	else 
@@ -378,8 +379,9 @@ function addFavoriteCategory(iUserName,category){
 	for(var i = 0;i<maxL;i++)
 		if(splitCat[i] == category)
 			return;
-	categories += '|'+category;
-	localStorage.setItem(iUserName+'favoriteCategories',categories);
+	categories += '|' + category;
+	setLSRow(iUserName, 'favoriteCategories', categories)
+	//localStorage.setItem(iUserName+'favoriteCategories',categories);
 	}
 
 /***********************************************************************************
@@ -436,6 +438,33 @@ function getArrayOfFavorites(iUserName, categoryId){
 
 }
 
+/***********************************************************************************
+*				               setLSRow			                                   *
+* 										                                           *
+* Insert or update a table stored in local storage      		 	               *
+* 										                                           *
+* 										                                           *
+* 										                                           *
+************************************************************************************/
+function setLSRow(userName, table, entry)
+{
+    localStorage.setItem(userName + table, entry);
+}
+
+/***********************************************************************************
+*				               getLSRow                			                   *
+* 										                                           *
+* get a table row stored in local storage      		 	                           *
+* 										                                           *
+* 										                                           *
+* 										                                           *
+************************************************************************************/
+function getLSRow(userName, table)
+{
+    return localStorage.getItem(userName + table);
+}
+
+
 //delete categories (relink favorites that are in them)
 //
 
@@ -490,6 +519,14 @@ function loadFunctionsIntoPage()
 	var removeFavoritePass = removeFavorite;
 	tempPassString += '\r\n'+ removeFavoritePass;
 
+	tempElement.textContent = tempPassString;
+	document.body.appendChild(tempElement);
+
+	var tempElement1 = document.createElement('script');
+	tempElement1.setAttribute("type", "application/javascript");
+	tempElement1.setAttribute("id", "AoFtI1");
+	tempPassString = '';
+
 	var getExportListPass = getExportList;
 	tempPassString += '\r\n'+ getExportListPass;
 
@@ -497,10 +534,16 @@ function loadFunctionsIntoPage()
 	tempPassString += '\r\n'+ addFavoriteCategoryPass;
 
 	var getArrayOfFavoritesPass = getArrayOfFavorites;
-	tempPassString += '\r\n'+ getArrayOfFavoritesPass;
+	tempPassString += '\r\n' + getArrayOfFavoritesPass;
 
-	tempElement.textContent = tempPassString;
-	document.body.appendChild(tempElement);
+	var setLSRowPass = setLSRow;
+	tempPassString += '\r\n' + setLSRowPass;
+
+	var getLSRowPass = getLSRow;
+	tempPassString += '\r\n' + getLSRowPass;
+
+	tempElement1.textContent = tempPassString;
+	document.body.appendChild(tempElement1);
 	}
 
 //////////////Free Floating Code///////////////////////
