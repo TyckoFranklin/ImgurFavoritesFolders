@@ -41,12 +41,12 @@ function contentEval(source) {
 
 
 /***********************************************************************************
-*				setUpABC					   *
-* 										   *
-* Main function in the website scope. Once loaded, sets everything up.		   *
-* 										   *
-* 										   *
-* 										   *
+*                                   setUpABC                 					   *
+* 										                                           *
+* Main function in the website scope. Once loaded, sets everything up.		       *
+* 													   							   *
+* 														   						   *
+* 															   					   *
 ************************************************************************************/
 
 function setUpABC(){
@@ -64,15 +64,15 @@ function setUpABC(){
 }
 
 /***********************************************************************************
-*				recursiveAttributeFinder			   *
-* 										   *
+*				            recursiveAttributeFinder			   			       *
+* 												   								   *
 * Website scope. Finds a dom element node with matching attributes and assigns a   *
 * new value to an attribute. Accepts a dom element node, tests it, and searches    *
 * all it's child elements. Adds or changes an supplied attribute of a supplied	   *
-* type.								  		   *
-* 										   *
-* 										   *
-* 										   *
+* type.																  		  	   *
+* 										 						  		  	       *
+* 										 						  		  	       *
+* 																  		  	       *
 ************************************************************************************/
 
 function recursiveAttributeFinder(pageElement,attriType,attriValue,newid)
@@ -103,12 +103,12 @@ function recursiveAttributeFinder(pageElement,attriType,attriValue,newid)
 	}
 
 /***********************************************************************************
-*				getPageType					   *
-* 										   *
-* Figure out what page is being viewed and store it.				   *
-* 										   *
-* 										   *
-* 										   *
+*		 							getPageType				                	   *
+* 										  										   *
+* Figure out what page is being viewed and store it.	            			   *
+* 										     								       *
+* 										  										   *
+* 										  										   *
 ************************************************************************************/
 
 function getPageType(){
@@ -124,12 +124,12 @@ function getPageType(){
 	}
 
 /***********************************************************************************
-*				cleanFavoritesImageSpace			   *
-* 										   *
-* Delete all the dom elements in the favorites image space element		   *
-* 										   *
-* 										   *
-* 										   *
+*				               cleanFavoritesImageSpace                			   *
+* 										                                           *
+* Delete all the dom elements in the favorites image space element		           *
+* 										                                           *
+* 										                                           *
+* 										                                           *
 ************************************************************************************/
 
 function cleanFavoritesImageSpace(){
@@ -143,12 +143,13 @@ function cleanFavoritesImageSpace(){
 
 
 /***********************************************************************************
-*				addSavedFavoritesToImageList			   *
-* 										   *
+*				               addSavedFavoritesToImageList			               *
+* 										                                           *
 * Add stored favorites to the favoirtes image space. Pass in the User name, the	   *
-* favorites category.								   *
-* 										   *
-* 										   *
+* favorites category.								                               *
+* 										                                           *
+* 										                                           *
+* 										                                           *
 ************************************************************************************/
 
 function addSavedFavoritesToImageList(categoryLabel,iUserName,categoryId){
@@ -186,12 +187,12 @@ function addSavedFavoritesToImageList(categoryLabel,iUserName,categoryId){
 }
 
 /***********************************************************************************
-*				addFavoriteToSaved				   *
-* 										   *
+*				               addFavoriteToSaved			               		   *
+* 										  			               			       *
 * Store a new favorite locally. Pass in the user name, the post id, the thumbnail, *
 * the category, and the time of capture. Updates stored data only if stored data   *
-* is null.									   *
-* 										   *
+* is null.									                                       *
+* 										                                           *
 ************************************************************************************/
 
 
@@ -228,13 +229,12 @@ function addFavoriteToSaved(iFavorite, iUserName, iFavoriteThumb,iCategory,iTime
 }
 
 /***********************************************************************************
-*				saveFavoritesFromPage				   *
-* 										   *
-* Scan page and find favorites, then add them to locally stored favorites	   *
-* 										   *
-* 										   *
-* 										   *
-* 										   *
+*				               saveFavoritesFromPage			                   *
+* 										   			               			       *
+* Scan page and find favorites, then add them to locally stored favorites		   *
+* 										                                           *
+* 										                                           *
+* 										                                           *
 ************************************************************************************/
 
 function saveFavoritesFromPage(classString){
@@ -259,13 +259,13 @@ function saveFavoritesFromPage(classString){
 	}
 
 /***********************************************************************************
-*				iLooper						   *
-* 										   *
+*				                         iLooper						           *
+* 										                                           *
 * Timer for checking favorites. Used for scrolling through newly loaded post 	   *
-*  panels on the various pages.						 	   *
-* 										   *
-* 										   *
-* 										   *
+*  panels on the various pages.						 	                           *
+* 										                                           *
+* 										                                           *
+* 										                                           *
 ************************************************************************************/
 
 function iLooper(time){
@@ -281,12 +281,12 @@ function iLooper(time){
 	}
 
 /***********************************************************************************
-*				removeFavorite					   *
-* 										   *
-* Removed favorite from locally stored favorites			 	   *
-* 										   *
-* 										   *
-* 										   *
+*				               removeFavorite					   			       *
+* 										   			                               *
+* Removed favorite from locally stored favorites			 	                   *
+* 										                                           *
+* 										                                           *
+* 										                                           *
 ************************************************************************************/
 
 
@@ -324,12 +324,12 @@ function removeFavorite(iFavorite, iUserName){
 	}
 
 /***********************************************************************************
-*				getExportList					   *
-* 										   *
-* Export all locally stored info for a user				 	   *
-* 										   *
-* 										   *
-* 										   *
+*				               getExportList					                   *
+* 										                                           *
+* Export all locally stored info for a user				 	                       *
+* 										                                           *
+* 										                                           *
+* 										                                           *
 ************************************************************************************/
 
 function getExportList(iUserName){
@@ -356,12 +356,12 @@ function getExportList(iUserName){
 	}
 
 /***********************************************************************************
-*				addFavoriteCategory				   *
-* 										   *
-* Add a new favorites category for a user.				 	   *
-* 										   *
-* 										   *
-* 										   *
+*				               addFavoriteCategory				                   *
+* 										                                           *
+* Add a new favorites category for a user.				 	                       *
+* 										                                           *
+* 										                                           *
+* 										                                           *
 ************************************************************************************/
 
 
@@ -383,12 +383,12 @@ function addFavoriteCategory(iUserName,category){
 	}
 
 /***********************************************************************************
-*				getArrayOfFavorites				   *
-* 										   *
-* Get locally stored favorites that belong to a category		 	   *
-* 										   *
-* 										   *
-* 										   *
+*				               getArrayOfFavorites				                   *
+* 										                                           *
+* Get locally stored favorites that belong to a category		 	               *
+* 										                                           *
+* 										                                           *
+* 										                                           *
 ************************************************************************************/
 
 function getArrayOfFavorites(iUserName, categoryId){
@@ -447,12 +447,12 @@ function getArrayOfFavorites(iUserName, categoryId){
 
 
 /***********************************************************************************
-*				loadFunctionsIntoPage				   *
-* 										   *
+*				               loadFunctionsIntoPage            				   *
+* 										                                           *
 * Pack and load all functions into a script element, then add to the webpage.	   *
-* 										   *
-* 										   *
-* 										   *
+* 										                                           *
+* 										                                           *
+* 										                                           *
 ************************************************************************************/
 
 //
