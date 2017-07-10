@@ -41,12 +41,9 @@ function contentEval(source) {
 
 
 /***********************************************************************************
-*                                   setUpABC                 					   *
-* 										                                           *
-* Main function in the website scope. Once loaded, sets everything up.		       *
-* 													   							   *
-* 														   						   *
-* 															   					   *
+                                   setUpABC                 					   
+ Main function in the website scope. Once loaded, sets everything up.		       
+
 ************************************************************************************/
 
 function setUpABC() {
@@ -64,15 +61,12 @@ function setUpABC() {
 }
 
 /***********************************************************************************
-*				            recursiveAttributeFinder			   			       *
-* 												   								   *
-* Website scope. Finds a dom element node with matching attributes and assigns a   *
-* new value to an attribute. Accepts a dom element node, tests it, and searches    *
-* all it's child elements. Adds or changes an supplied attribute of a supplied	   *
-* type.																  		  	   *
-* 										 						  		  	       *
-* 										 						  		  	       *
-* 																  		  	       *
+				            recursiveAttributeFinder			   			       
+
+ Website scope. Finds a dom element node with matching attributes and assigns a   
+ new value to an attribute. Accepts a dom element node, tests it, and searches    
+ all it's child elements. Adds or changes an supplied attribute of a supplied	   
+ type.																  		  	   
 ************************************************************************************/
 
 function recursiveAttributeFinder(pageElement,attriType,attriValue,newid)
@@ -103,12 +97,8 @@ function recursiveAttributeFinder(pageElement,attriType,attriValue,newid)
 	}
 
 /***********************************************************************************
-*		 							getPageType				                	   *
-* 										  										   *
-* Figure out what page is being viewed and store it.	            			   *
-* 										     								       *
-* 										  										   *
-* 										  										   *
+		 							getPageType				                	   
+ Figure out what page is being viewed and store it.	            			   
 ************************************************************************************/
 
 function getPageType(){
@@ -124,12 +114,8 @@ function getPageType(){
 	}
 
 /***********************************************************************************
-*				               cleanFavoritesImageSpace                			   *
-* 										                                           *
-* Delete all the dom elements in the favorites image space element		           *
-* 										                                           *
-* 										                                           *
-* 										                                           *
+				               cleanFavoritesImageSpace                	  
+ Delete all the dom elements in the favorites image space element		           
 ************************************************************************************/
 
 function cleanFavoritesImageSpace(){
@@ -143,13 +129,11 @@ function cleanFavoritesImageSpace(){
 
 
 /***********************************************************************************
-*				               addSavedFavoritesToImageList			               *
-* 										                                           *
-* Add stored favorites to the favoirtes image space. Pass in the User name, the	   *
-* favorites category.								                               *
-* 										                                           *
-* 										                                           *
-* 										                                           *
+				               addSavedFavoritesToImageList	
+           
+ Add stored favorites to the favoirtes image space. Pass in the User name, the	   
+ favorites category.
+
 ************************************************************************************/
 
 function addSavedFavoritesToImageList(categoryLabel,iUserName,categoryId){
