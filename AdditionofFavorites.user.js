@@ -43,9 +43,7 @@ function contentEval(source) {
 /***********************************************************************************
                                    setUpABC                 					   
  Main function in the website scope. Once loaded, sets everything up.		       
-
 ************************************************************************************/
-
 function setUpABC() {
     window.iUserName = document.getElementsByClassName("topbar-icon account-user-name")[0].innerText;
 	getPageType();
@@ -61,14 +59,12 @@ function setUpABC() {
 }
 
 /***********************************************************************************
-				            recursiveAttributeFinder			   			       
-
+				            recursiveAttributeFinder			  		
  Website scope. Finds a dom element node with matching attributes and assigns a   
  new value to an attribute. Accepts a dom element node, tests it, and searches    
  all it's child elements. Adds or changes an supplied attribute of a supplied	   
  type.																  		  	   
 ************************************************************************************/
-
 function recursiveAttributeFinder(pageElement,attriType,attriValue,newid)
 	{
 	if (!pageElement)
@@ -100,7 +96,6 @@ function recursiveAttributeFinder(pageElement,attriType,attriValue,newid)
 		 							getPageType				                	   
  Figure out what page is being viewed and store it.	            			   
 ************************************************************************************/
-
 function getPageType(){
 	var locationString = window.location.href;	
 	if (locationString == 'http://imgur.com/account/favorites')
@@ -117,7 +112,6 @@ function getPageType(){
 				               cleanFavoritesImageSpace                	  
  Delete all the dom elements in the favorites image space element		           
 ************************************************************************************/
-
 function cleanFavoritesImageSpace(){
 
 	var tempElement = document.getElementById('imagelist');
@@ -129,13 +123,10 @@ function cleanFavoritesImageSpace(){
 
 
 /***********************************************************************************
-				               addSavedFavoritesToImageList	
-           
+                                addSavedFavoritesToImageList	
  Add stored favorites to the favoirtes image space. Pass in the User name, the	   
  favorites category.
-
 ************************************************************************************/
-
 function addSavedFavoritesToImageList(categoryLabel,iUserName,categoryId){
 
 	var tempElement = document.createElement('div');
@@ -171,16 +162,11 @@ function addSavedFavoritesToImageList(categoryLabel,iUserName,categoryId){
 }
 
 /***********************************************************************************
-*				               addFavoriteToSaved			               		   *
-* 										  			               			       *
-* Store a new favorite locally. Pass in the user name, the post id, the thumbnail, *
-* the category, and the time of capture. Updates stored data only if stored data   *
-* is null.									                                       *
-* 										                                           *
+                                addFavoriteToSaved			               		    										  			               			       
+ Store a new favorite locally. Pass in the user name, the post id, the thumbnail, 
+ the category, and the time of capture. Updates stored data only if stored data   
+ is null.									                                        										                                           
 ************************************************************************************/
-
-
-
 function addFavoriteToSaved(iFavorite, iUserName, iFavoriteThumb,iCategory,iTime){
 //console.log(iFavorite+'  '+ iUserName+'  '+iFavoriteThumb);
 	iUserName = ''+iUserName;
@@ -213,14 +199,9 @@ function addFavoriteToSaved(iFavorite, iUserName, iFavoriteThumb,iCategory,iTime
 }
 
 /***********************************************************************************
-*				               saveFavoritesFromPage			                   *
-* 										   			               			       *
-* Scan page and find favorites, then add them to locally stored favorites		   *
-* 										                                           *
-* 										                                           *
-* 										                                           *
+                                saveFavoritesFromPage
+ Scan page and find favorites, then add them to locally stored favorites	
 ************************************************************************************/
-
 function saveFavoritesFromPage(classString){
 	var favoriteElementList = document.getElementsByClassName(classString);
 	var i = 0;
@@ -243,15 +224,10 @@ function saveFavoritesFromPage(classString){
 	}
 
 /***********************************************************************************
-*				                         iLooper						           *
-* 										                                           *
-* Timer for checking favorites. Used for scrolling through newly loaded post 	   *
-*  panels on the various pages.						 	                           *
-* 										                                           *
-* 										                                           *
-* 										                                           *
+                                      iLooper
+ Timer for checking favorites. Used for scrolling through newly loaded post 	   
+ panels on the various pages.						 	                           
 ************************************************************************************/
-
 function iLooper(time){
 	if(!window.iKeepLooping){
 		setTimeout(function(){iLooper(time);}, time);
@@ -265,16 +241,9 @@ function iLooper(time){
 	}
 
 /***********************************************************************************
-*				               removeFavorite					   			       *
-* 										   			                               *
-* Remove favorite from locally stored favorites			 	                       *
-* 										                                           *
-* 										                                           *
-* 										                                           *
+                                removeFavorite					   		
+ Remove favorite from locally stored favorites
 ************************************************************************************/
-
-
-
 function removeFavorite(iFavorite, iUserName){
 	var i;
 	var tempId;
@@ -308,14 +277,9 @@ function removeFavorite(iFavorite, iUserName){
 	}
 
 /***********************************************************************************
-*				               getExportList					                   *
-* 										                                           *
-* Export all locally stored info for a user				 	                       *
-* 										                                           *
-* 										                                           *
-* 										                                           *
+                                getExportList					                   
+ Export all locally stored info for a user
 ************************************************************************************/
-
 function getExportList(iUserName){
 	var stringToReturn = 'u|'+iUserName+'|u\r\n';
 	var favoriteCount = parseInt(getLSRow(iUserName , 'FavoriteCount'));
@@ -340,16 +304,9 @@ function getExportList(iUserName){
 	}
 
 /***********************************************************************************
-*				               addFavoriteCategory				                   *
-* 										                                           *
-* Add a new favorites category for a user.				 	                       *
-* 										                                           *
-* 										                                           *
-* 										                                           *
+                                addFavoriteCategory
+ Add a new favorites category for a user.
 ************************************************************************************/
-
-
-
 function addFavoriteCategory(iUserName,category){
 	var categories = '';
 	var lSCategories = getLSRow(iUserName, 'favoriteCategories');
@@ -369,14 +326,9 @@ function addFavoriteCategory(iUserName,category){
 	}
 
 /***********************************************************************************
-*				               getArrayOfFavorites				                   *
-* 										                                           *
-* Get locally stored favorites that belong to a category		 	               *
-* 										                                           *
-* 										                                           *
-* 										                                           *
+                                getArrayOfFavorites
+ Get locally stored favorites that belong to a category
 ************************************************************************************/
-
 function getArrayOfFavorites(iUserName, categoryId){
 	var favoriteArray = [];
 	var favoriteCount = parseInt(localStorage.getItem(iUserName+'FavoriteCount'));
@@ -423,12 +375,8 @@ function getArrayOfFavorites(iUserName, categoryId){
 }
 
 /***********************************************************************************
-*				               setLSRow			                                   *
-* 										                                           *
-* Insert or update a table stored in local storage      		 	               *
-* 										                                           *
-* 										                                           *
-* 										                                           *
+                                setLSRow
+ Insert or update a table stored in local storage
 ************************************************************************************/
 function setLSRow(userName, table, entry)
 {
@@ -436,16 +384,26 @@ function setLSRow(userName, table, entry)
 }
 
 /***********************************************************************************
-*				               getLSRow                			                   *
-* 										                                           *
-* get a table row stored in local storage      		 	                           *
-* 										                                           *
-* 										                                           *
-* 										                                           *
+                                getLSRow
+ get a table row stored in local storage
 ************************************************************************************/
 function getLSRow(userName, table)
 {
     return localStorage.getItem(userName + table);
+}
+
+/***********************************************************************************
+                                setupFavoritesBar
+ get the favorites bar setup with the categories.
+************************************************************************************/
+function setupFavoritesBar() {
+    var favoritesBar = document.getElementsByClassName('sentence-sorting'); //keep as array so that it gets assigned by reference
+    if (favoritesBar[0] == null)
+        return;
+    var tempElement = document.createElement('span');
+    tempElement.innerHTML = 'from the category: ';
+    tempElement.setAttribute('class', 'middle-text sorting-text-align');
+    favoritesBar[0].appendChild(tempElement);
 }
 
 
@@ -460,12 +418,8 @@ function getLSRow(userName, table)
 
 
 /***********************************************************************************
-*				               loadFunctionsIntoPage            				   *
-* 										                                           *
-* Pack and load all functions into a script element, then add to the webpage.	   *
-* 										                                           *
-* 										                                           *
-* 										                                           *
+                                loadFunctionsIntoPage
+ Pack and load all functions into a script element, then add to the webpage.
 ************************************************************************************/
 
 //
@@ -476,58 +430,87 @@ function loadFunctionsIntoPage()
 	tempElement.setAttribute("id", "AoFtI");
 	var tempPassString = '';
 
-	var setUpABCPass = setUpABC;
-	tempPassString += setUpABCPass;
+	//var setUpABCPass = setUpABC;
+	//tempPassString += setUpABCPass;
 
-	var recursiveAttributeFinderPass = recursiveAttributeFinder;
-	tempPassString += '\r\n'+ recursiveAttributeFinderPass;
+	//var recursiveAttributeFinderPass = recursiveAttributeFinder;
+	//tempPassString += '\r\n'+ recursiveAttributeFinderPass;
 
-	var getPageTypePass = getPageType;
-	tempPassString += '\r\n'+ getPageTypePass;
+	//var getPageTypePass = getPageType;
+	//tempPassString += '\r\n'+ getPageTypePass;
 
-	var cleanFavoritesImageSpacePass = cleanFavoritesImageSpace;
-	tempPassString += '\r\n'+ cleanFavoritesImageSpacePass;
+	//var cleanFavoritesImageSpacePass = cleanFavoritesImageSpace;
+	//tempPassString += '\r\n'+ cleanFavoritesImageSpacePass;
 
-	var addSavedFavoritesToImageListPass = addSavedFavoritesToImageList;
-	tempPassString += '\r\n'+ addSavedFavoritesToImageList;
+	//var addSavedFavoritesToImageListPass = addSavedFavoritesToImageList;
+	//tempPassString += '\r\n'+ addSavedFavoritesToImageList;
 
-	var addFavoriteToSavedPass = addFavoriteToSaved;
-	tempPassString += '\r\n'+ addFavoriteToSavedPass;
+	//var addFavoriteToSavedPass = addFavoriteToSaved;
+	//tempPassString += '\r\n'+ addFavoriteToSavedPass;
 
-	var saveFavoritesFromPagePass = saveFavoritesFromPage;
-	tempPassString += '\r\n'+ saveFavoritesFromPagePass;
+	//var saveFavoritesFromPagePass = saveFavoritesFromPage;
+	//tempPassString += '\r\n'+ saveFavoritesFromPagePass;
 
-	var iLooperPass = iLooper;
-	tempPassString += '\r\n'+ iLooperPass;
+	//var iLooperPass = iLooper;
+	//tempPassString += '\r\n'+ iLooperPass;
 
-	var removeFavoritePass = removeFavorite;
-	tempPassString += '\r\n'+ removeFavoritePass;
+	//var removeFavoritePass = removeFavorite;
+	//tempPassString += '\r\n'+ removeFavoritePass;
 
-	tempElement.textContent = tempPassString;
-	document.body.appendChild(tempElement);
+	//tempElement.textContent = tempPassString;
+	//document.body.appendChild(tempElement);
 
-	var tempElement1 = document.createElement('script');
-	tempElement1.setAttribute("type", "application/javascript");
-	tempElement1.setAttribute("id", "AoFtI1");
-	tempPassString = '';
+    ////new script tag.
+	//var tempElement1 = document.createElement('script');
+	//tempElement1.setAttribute("type", "application/javascript");
+	//tempElement1.setAttribute("id", "AoFtI1");
+	//tempPassString = '';
 
-	var getExportListPass = getExportList;
-	tempPassString += '\r\n'+ getExportListPass;
+	//var getExportListPass = getExportList;
+	//tempPassString += '\r\n'+ getExportListPass;
 
-	var addFavoriteCategoryPass = addFavoriteCategory;
-	tempPassString += '\r\n'+ addFavoriteCategoryPass;
+	//var addFavoriteCategoryPass = addFavoriteCategory;
+	//tempPassString += '\r\n'+ addFavoriteCategoryPass;
 
-	var getArrayOfFavoritesPass = getArrayOfFavorites;
-	tempPassString += '\r\n' + getArrayOfFavoritesPass;
+	//var getArrayOfFavoritesPass = getArrayOfFavorites;
+	//tempPassString += '\r\n' + getArrayOfFavoritesPass;
 
-	var setLSRowPass = setLSRow;
-	tempPassString += '\r\n' + setLSRowPass;
+	//var setLSRowPass = setLSRow;
+	//tempPassString += '\r\n' + setLSRowPass;
 
-	var getLSRowPass = getLSRow;
-	tempPassString += '\r\n' + getLSRowPass;
+	//var getLSRowPass = getLSRow;
+	//tempPassString += '\r\n' + getLSRowPass;
 
-	tempElement1.textContent = tempPassString;
-	document.body.appendChild(tempElement1);
+	//var setupFavoritesBarPass = setupFavoritesBar;
+	//tempPassString += '\r\n' + setupFavoritesBarPass;	
+
+    //tempElement1.textContent = tempPassString;
+
+
+    tempElement.textContent = setUpABC;
+	tempElement.textContent += '\r\n' + recursiveAttributeFinder;
+	tempElement.textContent += '\r\n' + getPageType;
+	tempElement.textContent += '\r\n' + cleanFavoritesImageSpace;
+	tempElement.textContent += '\r\n' + addSavedFavoritesToImageList;
+	tempElement.textContent += '\r\n' + addFavoriteToSaved;
+	tempElement.textContent += '\r\n' + saveFavoritesFromPage;
+	tempElement.textContent += '\r\n' + iLooper;
+	tempElement.textContent += '\r\n' + removeFavorite;
+	document.head.appendChild(tempElement);
+
+    //new script tag.
+    var tempElement1 = document.createElement('script');
+    tempElement1.setAttribute("type", "application/javascript");
+    tempElement1.setAttribute("id", "AoFtI1");
+
+	tempElement1.textContent = '\r\n' + getExportList;
+	tempElement1.textContent += '\r\n' + addFavoriteCategory;
+	tempElement1.textContent += '\r\n' + getArrayOfFavorites;
+	tempElement1.textContent += '\r\n' + setLSRow;
+	tempElement1.textContent += '\r\n' + getLSRow;
+	tempElement1.textContent += '\r\n' + setupFavoritesBar;
+
+	document.head.appendChild(tempElement1);
 	}
 
 //////////////Free Floating Code///////////////////////
