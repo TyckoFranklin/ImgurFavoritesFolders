@@ -51,7 +51,9 @@ function setUpABC() {
 		localStorage.setItem(window.iUserName+'FavoriteCount','0');
 	var lSCategories = localStorage.getItem(iUserName+'favoriteCategories');
 	if (lSCategories == null)
-		localStorage.setItem(iUserName+'favoriteCategories','unorganized');
+	    localStorage.setItem(iUserName + 'favoriteCategories', 'unorganized');
+	if (window.iPageType == 'favorites')
+	    setupFavoritesBar();
 	window.favoriteOriginalElementCount = 0;
 	window.dateObject = new Date();
 	window.iKeepLooping = true;
@@ -401,10 +403,100 @@ function setupFavoritesBar() {
     if (favoritesBar[0] == null)
         return;
     var tempElement = document.createElement('span');
+    //create label text
     tempElement.innerHTML = 'from the category: ';
     tempElement.setAttribute('class', 'middle-text sorting-text-align');
     favoritesBar[0].appendChild(tempElement);
+    //create categoriesToolBarToggle
+    tempElement = document.createElement('div');
+    tempElement.textContent = 'Sorting Tools';
+    tempElement.setAttribute('id', 'categoriesToolBarToggle');
+    document.body.appendChild(tempElement);
+    //create the category selection
+    tempElement = document.createElement('div');
+    tempElement.setAttribute('class', 'combobox sorting-text-align');
+    tempElement.setAttribute('id', 'categorySelector')
+    
+
+    //currently selected
+    var currentlySelected = document.createElement('div');
+    currentlySelected.setAttribute('class', 'selection');
+
+
+    //currentSelectedCategoryDisplay
+    var currentSelectedCategoryDisplay = document.createElement('span');
+    currentSelectedCategoryDisplay.setAttribute('id', 'currentSelectedCategoryDisplay');
+    currentSelectedCategoryDisplay.setAttribute('class', 'name');
+    currentSelectedCategoryDisplay.innerHTML = 'Imgur';
+    //setup a click event with a timeout so that the native jquery doesn't mess with the function trying to change the class name.
+    // this was such a pain to figure out!
+    currentSelectedCategoryDisplay.onclick = function () { setTimeout(function () { document.getElementById('categorySelector').setAttribute('class', 'combobox sorting-text-align opened'); }, 100); };
+    currentlySelected.appendChild(currentSelectedCategoryDisplay);    
+
+    //selection list
+    var categoryTableHolder = document.createElement('div');
+    categoryTableHolder.setAttribute('class', 'options');
+
+    //currentlySelectedInList
+    var currentlySelectedInList = document.createElement('div');
+    currentlySelectedInList.setAttribute('class', 'combobox-header-current bold');
+    currentlySelectedInList.innerHTML = 'current:';
+
+    //CurrentlySelectedInListTitle
+    var currentlySelectedInListTitle = document.createElement('div');
+    currentlySelectedInListTitle.setAttribute('class', 'combobox-current green');
+    currentlySelectedInListTitle.setAttribute('id', 'currentSelectedCategory');
+    currentlySelectedInListTitle.innerHTML = '\r\n\t\t\tImgur\r\n';
+
+    currentlySelectedInList.appendChild(currentlySelectedInListTitle);
+    categoryTableHolder.appendChild(currentlySelectedInList);
+
+    //get categories
+    var categories = getLSRow(window.iUserName, 'favoriteCategories').split('|');
+    var numCat = categories.length;
+
+    //create the toolbar
+    categoriesToolBar = document.createElement('div');
+    categoriesToolBar.setAttribute('id', 'categoriesToolBar');
+
+    var tempDiv;
+    for (var i = 0; i < numCat; i++) {
+        tempDiv = document.createElement('div');
+        tempDiv.setAttribute('id', 'CatToolBar' + i);
+        tempDiv.textContent = categories[i];
+        categoriesToolBar.appendChild(tempDiv)
+        //do a closure for the onclick to capture i
+        //div.firstChild.onclick = function (i) { return function () { cleanFavoritesImageSpace(); addSavedFavoritesToImageList('NotImplemented', window.iUserName, i); } }(i);
+    }
+    document.body.appendChild(categoriesToolBar);
+
+    //Setup the table
+    var categoryTable = document.createElement('ul');
+    categoryTable.setAttribute('id', 'CategoriesTable');
+
+    var liTemp;
+    for (var i = 0; i < numCat; i++)
+    {
+        //create table menu for categories
+        liTemp = document.createElement('li');
+        liTemp.setAttribute('class', 'item');
+        liTemp.appendChild(document.createElement('a'));
+        liTemp.firstChild.innerHTML = categories[i];
+        liTemp.firstChild.setAttribute('class', 'name');
+        //do a closure for the onclick to capture i
+        liTemp.firstChild.onclick = function (i) { return function () { cleanFavoritesImageSpace(); addSavedFavoritesToImageList('NotImplemented', window.iUserName, i); } }(i);
+        categoryTable.appendChild(liTemp);
+    }
+
+    categoryTableHolder.appendChild(categoryTable);
+    currentlySelected.appendChild(categoryTableHolder);
+    tempElement.appendChild(currentlySelected);
+    favoritesBar[0].appendChild(tempElement);
+
+
 }
+
+
 
 
 //delete categories (relink favorites that are in them)
@@ -511,6 +603,40 @@ function loadFunctionsIntoPage()
 	tempElement1.textContent += '\r\n' + setupFavoritesBar;
 
 	document.head.appendChild(tempElement1);
+    /************************************************************/
+    //CSS Element for the document
+	var tempElementCSS = document.createElement('style');
+	tempElementCSS.setAttribute("id", "AoFtICSS");
+	tempElementCSS.textContent = '#categoriesToolBar { \r\n';
+	tempElementCSS.textContent += 'position: fixed; \r\n';
+	tempElementCSS.textContent += 'width: 15%; \r\n';
+	tempElementCSS.textContent += 'height: 400px; \r\n';
+	tempElementCSS.textContent += 'background-color: #2C2F34; \r\n';
+	tempElementCSS.textContent += 'border-color: #f2f2f2; \r\n';
+	tempElementCSS.textContent += 'border-radius: 5px; \r\n';
+	tempElementCSS.textContent += 'left: 2%; \r\n';
+	tempElementCSS.textContent += 'top: 132px; \r\n';
+	tempElementCSS.textContent += 'display: block; \r\n';
+	tempElementCSS.textContent += 'z-index: 1; \r\n';
+	tempElementCSS.textContent += '} \r\n';
+    //sorting options
+	tempElementCSS.textContent += '#categoriesToolBarToggle { \r\n';
+	tempElementCSS.textContent += 'left: 2%; \r\n';
+	tempElementCSS.textContent += 'position: fixed; \r\n';
+	tempElementCSS.textContent += 'top: 132px; \r\n';
+	tempElementCSS.textContent += 'padding: 5px; \r\n';
+	tempElementCSS.textContent += 'text-align: center; \r\n';
+	tempElementCSS.textContent += 'vertical-align: middle; \r\n';
+    tempElementCSS.textContent += 'border-radius: 5px; \r\n';
+	tempElementCSS.textContent += 'background-color: #1BB76E; \r\n';
+	tempElementCSS.textContent += 'display: block; \r\n';
+	tempElementCSS.textContent += 'z-index: 2; \r\n';
+	tempElementCSS.textContent += 'cursor: pointer; \r\n';
+	tempElementCSS.textContent += '}';
+
+
+
+	document.head.appendChild(tempElementCSS);
 	}
 
 //////////////Free Floating Code///////////////////////
