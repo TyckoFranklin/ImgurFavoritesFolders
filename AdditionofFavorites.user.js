@@ -46,12 +46,14 @@ function contentEval(source) {
 ************************************************************************************/
 function setUpABC() {
     window.iUserName = document.getElementsByClassName("topbar-icon account-user-name")[0].innerText;
+    
 	getPageType();
 	if(localStorage.getItem(window.iUserName+'FavoriteCount')==null)
 		localStorage.setItem(window.iUserName+'FavoriteCount','0');
 	var lSCategories = localStorage.getItem(iUserName+'favoriteCategories');
 	if (lSCategories == null)
 	    localStorage.setItem(iUserName + 'favoriteCategories', 'unorganized');
+	window.iCategoryCount = localStorage.getItem(iUserName + 'favoriteCategories').split('|').length;
 	if (window.iPageType == 'favorites')
 	    setupFavoritesBar();
 	window.favoriteOriginalElementCount = 0;
@@ -129,35 +131,23 @@ function cleanFavoritesImageSpace(){
  Add stored favorites to the favoirtes image space. Pass in the User name, the	   
  favorites category.
 ************************************************************************************/
-function addSavedFavoritesToImageList(categoryLabel,iUserName,categoryId){
+function addSavedFavoritesToImageList(iUserName,categoryId){
 
 	var tempElement = document.createElement('div');
 //Don't look for new favorites.
 	window.iKeepLooping = false;
 	var imageHolder = document.getElementById('imagelist');
-/* old	var favoriteCount = parseInt(localStorage.getItem(iUserName+'FavoriteCount'));
-	for(var i = 0;i<favoriteCount;i++){
-		tempElement.setAttribute('id',localStorage.getItem(iUserName+'favorite'+i));
-		tempElement.setAttribute('class','post');
-		tempElement.innerHTML = '\r\n<a class="image-list-link" href="/account/favorites/'
-					+ localStorage.getItem(iUserName+'favorite'+i)
-					+'" data-page="0">\r\n<img alt="" src="//i.imgur.com/'
-					+ localStorage.getItem(iUserName+'favoriteThumb'+i)
-					+'" original-title="">\r\n</a>\r\n';
-		imageHolder.firstChild.appendChild(tempElement);
-		tempElement = document.createElement('div');
-		}    
-*/
 	var elements = getArrayOfFavorites(iUserName, categoryId);
 	var max = elements.length;
-	for(var i = 0;i<max;i++){
+	for (var i = 0; i < max; i++) {        
 		tempElement.setAttribute('id',elements[i].postId);
 		tempElement.setAttribute('class','post');
 		tempElement.innerHTML = '\r\n<a class="image-list-link" href="/account/favorites/'
 					+ elements[i].postId
 					+'" data-page="0">\r\n<img alt="" src="//i.imgur.com/'
 					+ elements[i].Thumbnail
-					+'" original-title="">\r\n</a>\r\n';
+					+ '" original-title="">\r\n</a>\r\n';
+		//tempElement.firstElementChild.firstElementChild.ondrag;
 		imageHolder.firstChild.appendChild(tempElement);
 		tempElement = document.createElement('div');
 		}                                       
@@ -329,9 +319,9 @@ function addFavoriteCategory(iUserName,category){
 
 /***********************************************************************************
                                 getArrayOfFavorites
- Get locally stored favorites that belong to a category
+ Get locally stored favorites that belong to a category, in a specific order
 ************************************************************************************/
-function getArrayOfFavorites(iUserName, categoryId){
+function getArrayOfFavorites(iUserName, categoryId, order){
 	var favoriteArray = [];
 	var favoriteCount = parseInt(localStorage.getItem(iUserName+'FavoriteCount'));
 	var i;
@@ -340,6 +330,7 @@ function getArrayOfFavorites(iUserName, categoryId){
 	var fCatL;
 	var x;
 	var addToArray = false;
+    //if specific category is wanted or include all categories
 	if(categoryId != -1){
 		for(i = 0;i<favoriteCount;i++){
 			fCat = localStorage.getItem(iUserName+'CatId'+i).split('|');
@@ -411,11 +402,24 @@ function setupFavoritesBar() {
     tempElement = document.createElement('div');
     tempElement.textContent = 'Sorting Tools';
     tempElement.setAttribute('id', 'categoriesToolBarToggle');
+    tempElement.onclick = function () { toggleElements('categoriesToolBar'); };
     document.body.appendChild(tempElement);
+    //setup new category 
+    tempElement = document.createElement('div');
+    tempElement.innerHTML = '<input type="text" id="newCategoryText">\r\n<input type="button" id="newCategoryButton" value="Add">';
+    tempElement.setAttribute('id', 'addNewCategoryPopup');
+    var divExit = document.createElement('div');
+    divExit.setAttribute('class', 'icon-x popupclose');
+    divExit.onclick = function () { toggleElements('addNewCategoryPopup'); };
+    tempElement.appendChild(divExit);
+    document.body.appendChild(tempElement);
+    document.getElementById('newCategoryButton').onclick = function () { userAddNewCategory(); }
     //create the category selection
     tempElement = document.createElement('div');
     tempElement.setAttribute('class', 'combobox sorting-text-align');
     tempElement.setAttribute('id', 'categorySelector')
+
+
     
 
     //currently selected
@@ -426,7 +430,7 @@ function setupFavoritesBar() {
     //currentSelectedCategoryDisplay
     var currentSelectedCategoryDisplay = document.createElement('span');
     currentSelectedCategoryDisplay.setAttribute('id', 'currentSelectedCategoryDisplay');
-    currentSelectedCategoryDisplay.setAttribute('class', 'name');
+    currentSelectedCategoryDisplay.setAttribute('class', 'name customcatselection');
     currentSelectedCategoryDisplay.innerHTML = 'Imgur';
     //setup a click event with a timeout so that the native jquery doesn't mess with the function trying to change the class name.
     // this was such a pain to figure out!
@@ -458,33 +462,39 @@ function setupFavoritesBar() {
     //create the toolbar
     categoriesToolBar = document.createElement('div');
     categoriesToolBar.setAttribute('id', 'categoriesToolBar');
+    categoriesToolBar.style.display = 'none';
 
     var tempDiv;
     for (var i = 0; i < numCat; i++) {
         tempDiv = document.createElement('div');
         tempDiv.setAttribute('id', 'CatToolBar' + i);
         tempDiv.textContent = categories[i];
-        categoriesToolBar.appendChild(tempDiv)
+        categoriesToolBar.appendChild(tempDiv);
         //do a closure for the onclick to capture i
-        //div.firstChild.onclick = function (i) { return function () { cleanFavoritesImageSpace(); addSavedFavoritesToImageList('NotImplemented', window.iUserName, i); } }(i);
+        //div.firstChild.onclick = function (i) { return function () { cleanFavoritesImageSpace(); addSavedFavoritesToImageList(window.iUserName, i); } }(i);
     }
+    tempDiv = document.createElement('div');
+    tempDiv.setAttribute('id', 'CatToolBarCreateNewCategory');
+    tempDiv.textContent = 'Add Category';
+    tempDiv.onclick = function () { toggleElements('addNewCategoryPopup'); };
+    categoriesToolBar.appendChild(tempDiv);
     document.body.appendChild(categoriesToolBar);
 
-    //Setup the table
+    //Setup the List
     var categoryTable = document.createElement('ul');
     categoryTable.setAttribute('id', 'CategoriesTable');
 
     var liTemp;
     for (var i = 0; i < numCat; i++)
     {
-        //create table menu for categories
+        //create list menu for categories
         liTemp = document.createElement('li');
         liTemp.setAttribute('class', 'item');
         liTemp.appendChild(document.createElement('a'));
         liTemp.firstChild.innerHTML = categories[i];
-        liTemp.firstChild.setAttribute('class', 'name');
+        liTemp.firstChild.setAttribute('class', 'categoryitem');
         //do a closure for the onclick to capture i
-        liTemp.firstChild.onclick = function (i) { return function () { cleanFavoritesImageSpace(); addSavedFavoritesToImageList('NotImplemented', window.iUserName, i); } }(i);
+        liTemp.firstChild.onclick = function (i) { return function () { cleanFavoritesImageSpace(); addSavedFavoritesToImageList(window.iUserName, i); } }(i);
         categoryTable.appendChild(liTemp);
     }
 
@@ -496,6 +506,37 @@ function setupFavoritesBar() {
 
 }
 
+/***********************************************************************************
+                                toggleElements
+ display or hide elements
+************************************************************************************/
+function toggleElements(elementToUse)
+{
+    var lTB = document.getElementById(elementToUse)
+    var lCTB = window.getComputedStyle(lTB);
+    if (lCTB.display == 'block' || lTB.style.display == 'block')
+        setTimeout(function () { lTB.style.display = 'none'; },100);
+    if (lCTB.display == 'none' || lTB.style.display == 'none' )
+        lTB.style.display = 'block';
+}
+
+/***********************************************************************************
+                                userAddNewCategory
+ Gets info from input and adds a new category
+************************************************************************************/
+function userAddNewCategory() {
+    var newCat = document.getElementById('newCategoryText').value;
+    if (newCat == '' || newCat == null)
+        return;
+    addFavoriteCategory(window.iUserName, newCat);
+    setTimeout(document.getElementById('addNewCategoryPopup').style.display = 'none', 100);
+    var tempDiv = document.createElement('div');    
+    tempDiv.setAttribute('id', 'CatToolBar' + window.iCategoryCount);
+    tempDiv.textContent = newCat;
+    var lastCatElement = document.getElementById('CatToolBar' + (window.iCategoryCount - 1));
+    lastCatElement.parentNode.insertBefore(tempDiv, lastCatElement.nextSibling);
+    window.iCategoryCount++;
+}
 
 
 
@@ -522,63 +563,6 @@ function loadFunctionsIntoPage()
 	tempElement.setAttribute("id", "AoFtI");
 	var tempPassString = '';
 
-	//var setUpABCPass = setUpABC;
-	//tempPassString += setUpABCPass;
-
-	//var recursiveAttributeFinderPass = recursiveAttributeFinder;
-	//tempPassString += '\r\n'+ recursiveAttributeFinderPass;
-
-	//var getPageTypePass = getPageType;
-	//tempPassString += '\r\n'+ getPageTypePass;
-
-	//var cleanFavoritesImageSpacePass = cleanFavoritesImageSpace;
-	//tempPassString += '\r\n'+ cleanFavoritesImageSpacePass;
-
-	//var addSavedFavoritesToImageListPass = addSavedFavoritesToImageList;
-	//tempPassString += '\r\n'+ addSavedFavoritesToImageList;
-
-	//var addFavoriteToSavedPass = addFavoriteToSaved;
-	//tempPassString += '\r\n'+ addFavoriteToSavedPass;
-
-	//var saveFavoritesFromPagePass = saveFavoritesFromPage;
-	//tempPassString += '\r\n'+ saveFavoritesFromPagePass;
-
-	//var iLooperPass = iLooper;
-	//tempPassString += '\r\n'+ iLooperPass;
-
-	//var removeFavoritePass = removeFavorite;
-	//tempPassString += '\r\n'+ removeFavoritePass;
-
-	//tempElement.textContent = tempPassString;
-	//document.body.appendChild(tempElement);
-
-    ////new script tag.
-	//var tempElement1 = document.createElement('script');
-	//tempElement1.setAttribute("type", "application/javascript");
-	//tempElement1.setAttribute("id", "AoFtI1");
-	//tempPassString = '';
-
-	//var getExportListPass = getExportList;
-	//tempPassString += '\r\n'+ getExportListPass;
-
-	//var addFavoriteCategoryPass = addFavoriteCategory;
-	//tempPassString += '\r\n'+ addFavoriteCategoryPass;
-
-	//var getArrayOfFavoritesPass = getArrayOfFavorites;
-	//tempPassString += '\r\n' + getArrayOfFavoritesPass;
-
-	//var setLSRowPass = setLSRow;
-	//tempPassString += '\r\n' + setLSRowPass;
-
-	//var getLSRowPass = getLSRow;
-	//tempPassString += '\r\n' + getLSRowPass;
-
-	//var setupFavoritesBarPass = setupFavoritesBar;
-	//tempPassString += '\r\n' + setupFavoritesBarPass;	
-
-    //tempElement1.textContent = tempPassString;
-
-
     tempElement.textContent = setUpABC;
 	tempElement.textContent += '\r\n' + recursiveAttributeFinder;
 	tempElement.textContent += '\r\n' + getPageType;
@@ -601,29 +585,39 @@ function loadFunctionsIntoPage()
 	tempElement1.textContent += '\r\n' + setLSRow;
 	tempElement1.textContent += '\r\n' + getLSRow;
 	tempElement1.textContent += '\r\n' + setupFavoritesBar;
+	tempElement1.textContent += '\r\n' + toggleElements;
+	tempElement1.textContent += '\r\n' + userAddNewCategory;
 
 	document.head.appendChild(tempElement1);
+
+
     /************************************************************/
     //CSS Element for the document
 	var tempElementCSS = document.createElement('style');
 	tempElementCSS.setAttribute("id", "AoFtICSS");
 	tempElementCSS.textContent = '#categoriesToolBar { \r\n';
 	tempElementCSS.textContent += 'position: fixed; \r\n';
-	tempElementCSS.textContent += 'width: 15%; \r\n';
-	tempElementCSS.textContent += 'height: 400px; \r\n';
+	tempElementCSS.textContent += 'width: 10%; \r\n';
+    tempElementCSS.textContent += 'min-height: 40%; \r\n';
+	tempElementCSS.textContent += 'max-height: 80%; \r\n';
+	tempElementCSS.textContent += 'overflow: auto; \r\n';
 	tempElementCSS.textContent += 'background-color: #2C2F34; \r\n';
 	tempElementCSS.textContent += 'border-color: #f2f2f2; \r\n';
 	tempElementCSS.textContent += 'border-radius: 5px; \r\n';
 	tempElementCSS.textContent += 'left: 2%; \r\n';
 	tempElementCSS.textContent += 'top: 132px; \r\n';
-	tempElementCSS.textContent += 'display: block; \r\n';
 	tempElementCSS.textContent += 'z-index: 1; \r\n';
 	tempElementCSS.textContent += '} \r\n';
+
+	tempElementCSS.textContent += '.customcatselection { \r\n';
+	tempElementCSS.textContent += 'margin-left: 5px; \r\n';
+	tempElementCSS.textContent += '} \r\n';
+
     //sorting options
 	tempElementCSS.textContent += '#categoriesToolBarToggle { \r\n';
 	tempElementCSS.textContent += 'left: 2%; \r\n';
 	tempElementCSS.textContent += 'position: fixed; \r\n';
-	tempElementCSS.textContent += 'top: 132px; \r\n';
+	tempElementCSS.textContent += 'top: 103px; \r\n';
 	tempElementCSS.textContent += 'padding: 5px; \r\n';
 	tempElementCSS.textContent += 'text-align: center; \r\n';
 	tempElementCSS.textContent += 'vertical-align: middle; \r\n';
@@ -632,9 +626,63 @@ function loadFunctionsIntoPage()
 	tempElementCSS.textContent += 'display: block; \r\n';
 	tempElementCSS.textContent += 'z-index: 2; \r\n';
 	tempElementCSS.textContent += 'cursor: pointer; \r\n';
-	tempElementCSS.textContent += '}';
+	tempElementCSS.textContent += '} \r\n';
 
+	tempElementCSS.textContent += '#addNewCategoryPopup { \r\n';
+	tempElementCSS.textContent += 'position: fixed; \r\n';
+	tempElementCSS.textContent += 'top: 50%; \r\n';
+	tempElementCSS.textContent += 'left: 50%; \r\n';
+	tempElementCSS.textContent += 'height: 150px; \r\n';
+	tempElementCSS.textContent += 'width: 380px; \r\n';
+	tempElementCSS.textContent += 'transform: translateY(-50%) translateX(-50%); \r\n';
+	tempElementCSS.textContent += 'text-align: center; \r\n';
+	tempElementCSS.textContent += 'vertical-align: middle; \r\n';
+	tempElementCSS.textContent += 'border-radius: 5px; \r\n';
+	tempElementCSS.textContent += 'background-color: #45484f; \r\n';
+	tempElementCSS.textContent += 'display: none; \r\n';
+	tempElementCSS.textContent += '} \r\n';
 
+	tempElementCSS.textContent += '#newCategoryText { \r\n';
+	tempElementCSS.textContent += 'top: 10px; \r\n';
+	tempElementCSS.textContent += 'position: absolute; \r\n';
+	tempElementCSS.textContent += 'left: 50%; \r\n';
+	tempElementCSS.textContent += 'transform: translateX(-50%); \r\n';
+	tempElementCSS.textContent += '} \r\n';
+
+	tempElementCSS.textContent += '#newCategoryButton { \r\n';
+	tempElementCSS.textContent += 'bottom: 10px; \r\n';
+	tempElementCSS.textContent += 'position: absolute; \r\n';
+	tempElementCSS.textContent += 'left: 50%; \r\n';
+	tempElementCSS.textContent += 'vertical-align: middle; \r\n';
+	tempElementCSS.textContent += 'transform: translateX(-50%); \r\n';
+	tempElementCSS.textContent += '} \r\n';
+
+	
+	tempElementCSS.textContent += '.categoryitem { \r\n';
+	tempElementCSS.textContent += 'font-size: 14px; \r\n';
+	tempElementCSS.textContent += 'line-height: 0px; \r\n';
+	tempElementCSS.textContent += '} \r\n';
+
+	
+	tempElementCSS.textContent += '#CatToolBarCreateNewCategory { \r\n';
+	tempElementCSS.textContent += 'right: 2%; \r\n';
+	tempElementCSS.textContent += 'bottom: 2%; \r\n';
+	tempElementCSS.textContent += 'padding: 5px; \r\n';
+	tempElementCSS.textContent += 'position: absolute; \r\n';
+	tempElementCSS.textContent += 'text-align: center; \r\n';
+	tempElementCSS.textContent += 'vertical-align: middle; \r\n';
+	tempElementCSS.textContent += 'border-radius: 5px; \r\n';
+	tempElementCSS.textContent += 'background-color: #1BB76E; \r\n';
+	tempElementCSS.textContent += 'display: block; \r\n';
+	tempElementCSS.textContent += 'cursor: pointer; \r\n';
+	tempElementCSS.textContent += '} \r\n';
+
+	tempElementCSS.textContent += '.popupclose { \r\n';
+	tempElementCSS.textContent += 'right: 2%; \r\n';
+	tempElementCSS.textContent += 'top: 10px; \r\n';
+	tempElementCSS.textContent += 'position: absolute; \r\n';
+	tempElementCSS.textContent += 'cursor: pointer; \r\n';
+	tempElementCSS.textContent += '} \r\n';
 
 	document.head.appendChild(tempElementCSS);
 	}
