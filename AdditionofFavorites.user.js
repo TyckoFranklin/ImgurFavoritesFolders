@@ -393,44 +393,35 @@ function setupFavoritesBar() {
     var favoritesBar = document.getElementsByClassName('sentence-sorting'); //keep as array so that it gets assigned by reference
     if (favoritesBar[0] == null)
         return;
-    var tempElement = document.createElement('span');
+    var tempElement;
     //create label text
-    tempElement.innerHTML = 'from the category: ';
-    tempElement.setAttribute('class', 'middle-text sorting-text-align');
-    favoritesBar[0].appendChild(tempElement);
+    var spanElement = createNewElement('span','class', 'middle-text sorting-text-align')
+    spanElement.innerHTML = 'from the category: ';    
+    favoritesBar[0].appendChild(spanElement);
     //create categoriesToolBarToggle
-    tempElement = document.createElement('div');
-    tempElement.textContent = 'Sorting Tools';
-    tempElement.setAttribute('id', 'categoriesToolBarToggle');
-    tempElement.onclick = function () { toggleElements('categoriesToolBar'); };
-    document.body.appendChild(tempElement);
+    var categoriesToolBarToggle = createNewElement('div', 'id', 'categoriesToolBarToggle');
+    categoriesToolBarToggle.textContent = 'Sorting Tools';
+    categoriesToolBarToggle.onclick = function () { toggleElements('categoriesToolBar'); };
+    document.body.appendChild(categoriesToolBarToggle);
     //setup new category 
-    tempElement = document.createElement('div');
-    tempElement.innerHTML = '<input type="text" id="newCategoryText">\r\n<input type="button" id="newCategoryButton" value="Add">';
-    tempElement.setAttribute('id', 'addNewCategoryPopup');
-    var divExit = document.createElement('div');
-    divExit.setAttribute('class', 'icon-x popupclose');
+    var newCategoryPopupTextInput = document.createElement('div');
+    newCategoryPopupTextInput.innerHTML = '<input type="text" id="newCategoryText">\r\n<input type="button" id="newCategoryButton" value="Add">';
+    newCategoryPopupTextInput.setAttribute('id', 'addNewCategoryPopup');
+    var divExit = createNewElement('div', 'class', 'icon-x popupclose');
     divExit.onclick = function () { toggleElements('addNewCategoryPopup'); };
-    tempElement.appendChild(divExit);
-    document.body.appendChild(tempElement);
+    newCategoryPopupTextInput.appendChild(divExit);
+    document.body.appendChild(newCategoryPopupTextInput);
     document.getElementById('newCategoryButton').onclick = function () { userAddNewCategory(); }
     //create the category selection
-    tempElement = document.createElement('div');
-    tempElement.setAttribute('class', 'combobox sorting-text-align');
-    tempElement.setAttribute('id', 'categorySelector')
-
-
+    var categorySelector = createNewElement('div', 'class', 'combobox sorting-text-align', 'id', 'categorySelector');
     
 
     //currently selected
-    var currentlySelected = document.createElement('div');
-    currentlySelected.setAttribute('class', 'selection');
+    var currentlySelected = createNewElement('div', 'class', 'selection');
 
 
     //currentSelectedCategoryDisplay
-    var currentSelectedCategoryDisplay = document.createElement('span');
-    currentSelectedCategoryDisplay.setAttribute('id', 'currentSelectedCategoryDisplay');
-    currentSelectedCategoryDisplay.setAttribute('class', 'name customcatselection');
+    var currentSelectedCategoryDisplay = createNewElement('span', 'id', 'currentSelectedCategoryDisplay', 'class', 'name customcatselection');
     currentSelectedCategoryDisplay.innerHTML = 'Imgur';
     //setup a click event with a timeout so that the native jquery doesn't mess with the function trying to change the class name.
     // this was such a pain to figure out!
@@ -438,18 +429,14 @@ function setupFavoritesBar() {
     currentlySelected.appendChild(currentSelectedCategoryDisplay);    
 
     //selection list
-    var categoryTableHolder = document.createElement('div');
-    categoryTableHolder.setAttribute('class', 'options');
+    var categoryTableHolder = createNewElement('div','class', 'options');
 
     //currentlySelectedInList
-    var currentlySelectedInList = document.createElement('div');
-    currentlySelectedInList.setAttribute('class', 'combobox-header-current bold');
+    var currentlySelectedInList = createNewElement('div','class', 'combobox-header-current bold');
     currentlySelectedInList.innerHTML = 'current:';
 
     //CurrentlySelectedInListTitle
-    var currentlySelectedInListTitle = document.createElement('div');
-    currentlySelectedInListTitle.setAttribute('class', 'combobox-current green');
-    currentlySelectedInListTitle.setAttribute('id', 'currentSelectedCategory');
+    var currentlySelectedInListTitle = createNewElement('div', 'class', 'combobox-current green', 'id', 'currentSelectedCategory');
     currentlySelectedInListTitle.innerHTML = '\r\n\t\t\tImgur\r\n';
 
     currentlySelectedInList.appendChild(currentlySelectedInListTitle);
@@ -460,48 +447,44 @@ function setupFavoritesBar() {
     var numCat = categories.length;
 
     //create the toolbar
-    categoriesToolBar = document.createElement('div');
-    categoriesToolBar.setAttribute('id', 'categoriesToolBar');
+    categoriesToolBar = createNewElement('div', 'id', 'categoriesToolBar');
     categoriesToolBar.style.display = 'none';
 
     var tempDiv;
     for (var i = 0; i < numCat; i++) {
-        tempDiv = document.createElement('div');
-        tempDiv.setAttribute('id', 'CatToolBar' + i);
+        tempDiv = createNewElement('div', 'id', 'CatToolBar' + i);
         tempDiv.textContent = categories[i];
         categoriesToolBar.appendChild(tempDiv);
-        //do a closure for the onclick to capture i
-        //div.firstChild.onclick = function (i) { return function () { cleanFavoritesImageSpace(); addSavedFavoritesToImageList(window.iUserName, i); } }(i);
     }
-    tempDiv = document.createElement('div');
-    tempDiv.setAttribute('id', 'CatToolBarCreateNewCategory');
+    tempDiv = createNewElement('div', 'id', 'CatToolBarCreateNewCategory');
     tempDiv.textContent = 'Add Category';
     tempDiv.onclick = function () { toggleElements('addNewCategoryPopup'); };
     categoriesToolBar.appendChild(tempDiv);
     document.body.appendChild(categoriesToolBar);
 
     //Setup the List
-    var categoryTable = document.createElement('ul');
-    categoryTable.setAttribute('id', 'CategoriesTable');
+    var categoryTable = createNewElement('ul', 'id', 'CategoriesTable');
 
     var liTemp;
     for (var i = 0; i < numCat; i++)
     {
         //create list menu for categories
-        liTemp = document.createElement('li');
-        liTemp.setAttribute('class', 'item');
-        liTemp.appendChild(document.createElement('a'));
+        liTemp = createNewElement('li', 'class', 'item');
+        liTemp.appendChild(createNewElement('a', 'class', 'categoryitem'));
         liTemp.firstChild.innerHTML = categories[i];
-        liTemp.firstChild.setAttribute('class', 'categoryitem');
+
+        //liTemp.appendChild(document.createElement('a'));
+        //liTemp.firstChild.innerHTML = categories[i];
+        //liTemp.firstChild.setAttribute('class', 'categoryitem');
         //do a closure for the onclick to capture i
-        liTemp.firstChild.onclick = function (i) { return function () { cleanFavoritesImageSpace(); addSavedFavoritesToImageList(window.iUserName, i); } }(i);
+        liTemp.firstChild.onclick = function (i) { return function () { cleanFavoritesImageSpace(); addSavedFavoritesToImageList(window.iUserName, i); updateCurrentlySelectedTitle(i); } }(i);
         categoryTable.appendChild(liTemp);
     }
 
     categoryTableHolder.appendChild(categoryTable);
     currentlySelected.appendChild(categoryTableHolder);
-    tempElement.appendChild(currentlySelected);
-    favoritesBar[0].appendChild(tempElement);
+    categorySelector.appendChild(currentlySelected);
+    favoritesBar[0].appendChild(categorySelector);
 
 
 }
@@ -538,6 +521,50 @@ function userAddNewCategory() {
     window.iCategoryCount++;
 }
 
+/***********************************************************************************
+                                createNewElement
+ Creates and returns a new element with attributes.
+************************************************************************************/
+function createNewElement(type, aT1, a1, aT2, a2, aT3, a3, aT4, a4, aT5, a5) {
+    newElement = document.createElement(type);
+    if (aT1 === undefined || a1 === undefined)
+        return newElement;
+    newElement.setAttribute(aT1, a1);
+    if (aT2 === undefined || a2 === undefined)
+        return newElement;
+    newElement.setAttribute(aT2, a2);
+    if (aT3 === undefined || a3 === undefined)
+        return newElement;
+    newElement.setAttribute(aT3, a3);
+    if (aT4 === undefined || a4 === undefined)
+        return newElement;
+    newElement.setAttribute(aT4, a4);
+    if (aT5 === undefined || a5 === undefined)
+        return newElement;
+    newElement.setAttribute(aT5, a5);
+    return newElement;
+
+}
+
+/***********************************************************************************
+                                updateCurrentlySelectedTitle
+ updates the selection list with the currenlty selected one.
+************************************************************************************/
+function updateCurrentlySelectedTitle(category) {
+  
+    //get categories
+    var categories = getLSRow(window.iUserName, 'favoriteCategories').split('|');
+    var numCat = categories.length;
+    //check if the index is out of bounds
+    if(category >=  numCat)
+        return;
+    //change the display bar
+    var displayBar = document.getElementById('currentSelectedCategoryDisplay');
+    displayBar.innerText = categories[category] + '';
+    //change the list display
+    var displayList = document.getElementById('currentSelectedCategory');
+    displayList.innerText = '\t\t\t' + categories[category] + '\r\n';
+}
 
 
 //delete categories (relink favorites that are in them)
@@ -557,140 +584,142 @@ function userAddNewCategory() {
 
 //
 function loadFunctionsIntoPage()
-	{
-	var tempElement = document.createElement('script');
-	tempElement.setAttribute("type", "application/javascript");
-	tempElement.setAttribute("id", "AoFtI");
-	var tempPassString = '';
+{
+    var tempElement = document.createElement('script');
+    tempElement.setAttribute("type", "application/javascript");
+    tempElement.setAttribute("id", "AoFtI");
+    var tempPassString = '';
 
     tempElement.textContent = setUpABC;
-	tempElement.textContent += '\r\n' + recursiveAttributeFinder;
-	tempElement.textContent += '\r\n' + getPageType;
-	tempElement.textContent += '\r\n' + cleanFavoritesImageSpace;
-	tempElement.textContent += '\r\n' + addSavedFavoritesToImageList;
-	tempElement.textContent += '\r\n' + addFavoriteToSaved;
-	tempElement.textContent += '\r\n' + saveFavoritesFromPage;
-	tempElement.textContent += '\r\n' + iLooper;
-	tempElement.textContent += '\r\n' + removeFavorite;
-	document.head.appendChild(tempElement);
+    tempElement.textContent += '\r\n' + recursiveAttributeFinder;
+    tempElement.textContent += '\r\n' + getPageType;
+    tempElement.textContent += '\r\n' + cleanFavoritesImageSpace;
+    tempElement.textContent += '\r\n' + addSavedFavoritesToImageList;
+    tempElement.textContent += '\r\n' + addFavoriteToSaved;
+    tempElement.textContent += '\r\n' + saveFavoritesFromPage;
+    tempElement.textContent += '\r\n' + iLooper;
+    tempElement.textContent += '\r\n' + removeFavorite;
+    document.head.appendChild(tempElement);
 
     //new script tag.
     var tempElement1 = document.createElement('script');
     tempElement1.setAttribute("type", "application/javascript");
     tempElement1.setAttribute("id", "AoFtI1");
 
-	tempElement1.textContent = '\r\n' + getExportList;
-	tempElement1.textContent += '\r\n' + addFavoriteCategory;
-	tempElement1.textContent += '\r\n' + getArrayOfFavorites;
-	tempElement1.textContent += '\r\n' + setLSRow;
-	tempElement1.textContent += '\r\n' + getLSRow;
-	tempElement1.textContent += '\r\n' + setupFavoritesBar;
-	tempElement1.textContent += '\r\n' + toggleElements;
-	tempElement1.textContent += '\r\n' + userAddNewCategory;
+    tempElement1.textContent = '\r\n' + getExportList;
+    tempElement1.textContent += '\r\n' + addFavoriteCategory;
+    tempElement1.textContent += '\r\n' + getArrayOfFavorites;
+    tempElement1.textContent += '\r\n' + setLSRow;
+    tempElement1.textContent += '\r\n' + getLSRow;
+    tempElement1.textContent += '\r\n' + setupFavoritesBar;
+    tempElement1.textContent += '\r\n' + toggleElements;
+    tempElement1.textContent += '\r\n' + createNewElement;
+    tempElement1.textContent += '\r\n' + updateCurrentlySelectedTitle;
+    tempElement1.textContent += '\r\n' + userAddNewCategory;
 
-	document.head.appendChild(tempElement1);
+    document.head.appendChild(tempElement1);
 
 
     /************************************************************/
     //CSS Element for the document
-	var tempElementCSS = document.createElement('style');
-	tempElementCSS.setAttribute("id", "AoFtICSS");
-	tempElementCSS.textContent = '#categoriesToolBar { \r\n';
-	tempElementCSS.textContent += 'position: fixed; \r\n';
-	tempElementCSS.textContent += 'width: 10%; \r\n';
+    var tempElementCSS = document.createElement('style');
+    tempElementCSS.setAttribute("id", "AoFtICSS");
+    tempElementCSS.textContent = '#categoriesToolBar { \r\n';
+    tempElementCSS.textContent += 'position: fixed; \r\n';
+    tempElementCSS.textContent += 'width: 10%; \r\n';
     tempElementCSS.textContent += 'min-height: 40%; \r\n';
-	tempElementCSS.textContent += 'max-height: 80%; \r\n';
-	tempElementCSS.textContent += 'overflow: auto; \r\n';
-	tempElementCSS.textContent += 'background-color: #2C2F34; \r\n';
-	tempElementCSS.textContent += 'border-color: #f2f2f2; \r\n';
-	tempElementCSS.textContent += 'border-radius: 5px; \r\n';
-	tempElementCSS.textContent += 'left: 2%; \r\n';
-	tempElementCSS.textContent += 'top: 132px; \r\n';
-	tempElementCSS.textContent += 'z-index: 1; \r\n';
-	tempElementCSS.textContent += '} \r\n';
+    tempElementCSS.textContent += 'max-height: 80%; \r\n';
+    tempElementCSS.textContent += 'overflow: auto; \r\n';
+    tempElementCSS.textContent += 'background-color: #2C2F34; \r\n';
+    tempElementCSS.textContent += 'border-color: #f2f2f2; \r\n';
+    tempElementCSS.textContent += 'border-radius: 5px; \r\n';
+    tempElementCSS.textContent += 'left: 2%; \r\n';
+    tempElementCSS.textContent += 'top: 132px; \r\n';
+    tempElementCSS.textContent += 'z-index: 1; \r\n';
+    tempElementCSS.textContent += '} \r\n';
 
-	tempElementCSS.textContent += '.customcatselection { \r\n';
-	tempElementCSS.textContent += 'margin-left: 5px; \r\n';
-	tempElementCSS.textContent += '} \r\n';
+    tempElementCSS.textContent += '.customcatselection { \r\n';
+    tempElementCSS.textContent += 'margin-left: 5px; \r\n';
+    tempElementCSS.textContent += '} \r\n';
 
     //sorting options
-	tempElementCSS.textContent += '#categoriesToolBarToggle { \r\n';
-	tempElementCSS.textContent += 'left: 2%; \r\n';
-	tempElementCSS.textContent += 'position: fixed; \r\n';
-	tempElementCSS.textContent += 'top: 103px; \r\n';
-	tempElementCSS.textContent += 'padding: 5px; \r\n';
-	tempElementCSS.textContent += 'text-align: center; \r\n';
-	tempElementCSS.textContent += 'vertical-align: middle; \r\n';
+    tempElementCSS.textContent += '#categoriesToolBarToggle { \r\n';
+    tempElementCSS.textContent += 'left: 2%; \r\n';
+    tempElementCSS.textContent += 'position: fixed; \r\n';
+    tempElementCSS.textContent += 'top: 103px; \r\n';
+    tempElementCSS.textContent += 'padding: 5px; \r\n';
+    tempElementCSS.textContent += 'text-align: center; \r\n';
+    tempElementCSS.textContent += 'vertical-align: middle; \r\n';
     tempElementCSS.textContent += 'border-radius: 5px; \r\n';
-	tempElementCSS.textContent += 'background-color: #1BB76E; \r\n';
-	tempElementCSS.textContent += 'display: block; \r\n';
-	tempElementCSS.textContent += 'z-index: 2; \r\n';
-	tempElementCSS.textContent += 'cursor: pointer; \r\n';
-	tempElementCSS.textContent += '} \r\n';
+    tempElementCSS.textContent += 'background-color: #1BB76E; \r\n';
+    tempElementCSS.textContent += 'display: block; \r\n';
+    tempElementCSS.textContent += 'z-index: 2; \r\n';
+    tempElementCSS.textContent += 'cursor: pointer; \r\n';
+    tempElementCSS.textContent += '} \r\n';
 
-	tempElementCSS.textContent += '#addNewCategoryPopup { \r\n';
-	tempElementCSS.textContent += 'position: fixed; \r\n';
-	tempElementCSS.textContent += 'top: 50%; \r\n';
-	tempElementCSS.textContent += 'left: 50%; \r\n';
-	tempElementCSS.textContent += 'height: 150px; \r\n';
-	tempElementCSS.textContent += 'width: 380px; \r\n';
-	tempElementCSS.textContent += 'transform: translateY(-50%) translateX(-50%); \r\n';
-	tempElementCSS.textContent += 'text-align: center; \r\n';
-	tempElementCSS.textContent += 'vertical-align: middle; \r\n';
-	tempElementCSS.textContent += 'border-radius: 5px; \r\n';
-	tempElementCSS.textContent += 'background-color: #45484f; \r\n';
-	tempElementCSS.textContent += 'display: none; \r\n';
-	tempElementCSS.textContent += '} \r\n';
+    tempElementCSS.textContent += '#addNewCategoryPopup { \r\n';
+    tempElementCSS.textContent += 'position: fixed; \r\n';
+    tempElementCSS.textContent += 'top: 50%; \r\n';
+    tempElementCSS.textContent += 'left: 50%; \r\n';
+    tempElementCSS.textContent += 'height: 150px; \r\n';
+    tempElementCSS.textContent += 'width: 380px; \r\n';
+    tempElementCSS.textContent += 'transform: translateY(-50%) translateX(-50%); \r\n';
+    tempElementCSS.textContent += 'text-align: center; \r\n';
+    tempElementCSS.textContent += 'vertical-align: middle; \r\n';
+    tempElementCSS.textContent += 'border-radius: 5px; \r\n';
+    tempElementCSS.textContent += 'background-color: #45484f; \r\n';
+    tempElementCSS.textContent += 'display: none; \r\n';
+    tempElementCSS.textContent += '} \r\n';
 
-	tempElementCSS.textContent += '#newCategoryText { \r\n';
-	tempElementCSS.textContent += 'top: 10px; \r\n';
-	tempElementCSS.textContent += 'position: absolute; \r\n';
-	tempElementCSS.textContent += 'left: 50%; \r\n';
-	tempElementCSS.textContent += 'transform: translateX(-50%); \r\n';
-	tempElementCSS.textContent += '} \r\n';
+    tempElementCSS.textContent += '#newCategoryText { \r\n';
+    tempElementCSS.textContent += 'top: 10px; \r\n';
+    tempElementCSS.textContent += 'position: absolute; \r\n';
+    tempElementCSS.textContent += 'left: 50%; \r\n';
+    tempElementCSS.textContent += 'transform: translateX(-50%); \r\n';
+    tempElementCSS.textContent += '} \r\n';
 
-	tempElementCSS.textContent += '#newCategoryButton { \r\n';
-	tempElementCSS.textContent += 'bottom: 10px; \r\n';
-	tempElementCSS.textContent += 'position: absolute; \r\n';
-	tempElementCSS.textContent += 'left: 50%; \r\n';
-	tempElementCSS.textContent += 'vertical-align: middle; \r\n';
-	tempElementCSS.textContent += 'transform: translateX(-50%); \r\n';
-	tempElementCSS.textContent += '} \r\n';
-
-	
-	tempElementCSS.textContent += '.categoryitem { \r\n';
-	tempElementCSS.textContent += 'font-size: 14px; \r\n';
-	tempElementCSS.textContent += 'line-height: 0px; \r\n';
-	tempElementCSS.textContent += '} \r\n';
+    tempElementCSS.textContent += '#newCategoryButton { \r\n';
+    tempElementCSS.textContent += 'bottom: 10px; \r\n';
+    tempElementCSS.textContent += 'position: absolute; \r\n';
+    tempElementCSS.textContent += 'left: 50%; \r\n';
+    tempElementCSS.textContent += 'vertical-align: middle; \r\n';
+    tempElementCSS.textContent += 'transform: translateX(-50%); \r\n';
+    tempElementCSS.textContent += '} \r\n';
 
 	
-	tempElementCSS.textContent += '#CatToolBarCreateNewCategory { \r\n';
-	tempElementCSS.textContent += 'right: 2%; \r\n';
-	tempElementCSS.textContent += 'bottom: 2%; \r\n';
-	tempElementCSS.textContent += 'padding: 5px; \r\n';
-	tempElementCSS.textContent += 'position: absolute; \r\n';
-	tempElementCSS.textContent += 'text-align: center; \r\n';
-	tempElementCSS.textContent += 'vertical-align: middle; \r\n';
-	tempElementCSS.textContent += 'border-radius: 5px; \r\n';
-	tempElementCSS.textContent += 'background-color: #1BB76E; \r\n';
-	tempElementCSS.textContent += 'display: block; \r\n';
-	tempElementCSS.textContent += 'cursor: pointer; \r\n';
-	tempElementCSS.textContent += '} \r\n';
+    tempElementCSS.textContent += '.categoryitem { \r\n';
+    tempElementCSS.textContent += 'font-size: 14px; \r\n';
+    tempElementCSS.textContent += 'line-height: 0px; \r\n';
+    tempElementCSS.textContent += '} \r\n';
 
-	tempElementCSS.textContent += '.popupclose { \r\n';
-	tempElementCSS.textContent += 'right: 2%; \r\n';
-	tempElementCSS.textContent += 'top: 10px; \r\n';
-	tempElementCSS.textContent += 'position: absolute; \r\n';
-	tempElementCSS.textContent += 'cursor: pointer; \r\n';
-	tempElementCSS.textContent += '} \r\n';
+	
+    tempElementCSS.textContent += '#CatToolBarCreateNewCategory { \r\n';
+    tempElementCSS.textContent += 'right: 2%; \r\n';
+    tempElementCSS.textContent += 'bottom: 2%; \r\n';
+    tempElementCSS.textContent += 'padding: 5px; \r\n';
+    tempElementCSS.textContent += 'position: absolute; \r\n';
+    tempElementCSS.textContent += 'text-align: center; \r\n';
+    tempElementCSS.textContent += 'vertical-align: middle; \r\n';
+    tempElementCSS.textContent += 'border-radius: 5px; \r\n';
+    tempElementCSS.textContent += 'background-color: #1BB76E; \r\n';
+    tempElementCSS.textContent += 'display: block; \r\n';
+    tempElementCSS.textContent += 'cursor: pointer; \r\n';
+    tempElementCSS.textContent += '} \r\n';
 
-	document.head.appendChild(tempElementCSS);
-	}
+    tempElementCSS.textContent += '.popupclose { \r\n';
+    tempElementCSS.textContent += 'right: 2%; \r\n';
+    tempElementCSS.textContent += 'top: 10px; \r\n';
+    tempElementCSS.textContent += 'position: absolute; \r\n';
+    tempElementCSS.textContent += 'cursor: pointer; \r\n';
+    tempElementCSS.textContent += '} \r\n';
 
-//////////////Free Floating Code///////////////////////
-//////////////Free Floating Code///////////////////////
-//////////////Free Floating Code///////////////////////
+    document.head.appendChild(tempElementCSS);
+}
 
-loadFunctionsIntoPage();
-contentEval("setUpABC();");
+    //////////////Free Floating Code///////////////////////
+    //////////////Free Floating Code///////////////////////
+    //////////////Free Floating Code///////////////////////
+
+    loadFunctionsIntoPage();
+    contentEval("setUpABC();");
 
